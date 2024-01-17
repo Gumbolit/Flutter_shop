@@ -120,7 +120,7 @@ class _MyScreenState extends State<Onbording_screen> {
               ),
               onPressed: () {
                 if (pageNamber == 3) {
-                  Navigator.pushNamed(context, "/");
+                  Navigator.pushNamed(context, "/Catalog_screen");
                   //Navigator.of(context).pushNamed(Routes.onbording_screen);
                 }
                 setState(() {
