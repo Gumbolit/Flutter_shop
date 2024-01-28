@@ -5,6 +5,8 @@ import 'package:meta/meta.dart';
 import 'package:stream_transform/stream_transform.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 
+import '../../favourites/ClassFavourite.dart';
+
 part 'search_event.dart';
 part 'search_state.dart';
 
@@ -53,21 +55,31 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
     print(" ");
     print("addFavoritesKeyToList Type - ");
-    print( addFavoritesKeyToList(res.data['data']).runtimeType);
+    //print( addFavoritesKeyToList(res.data['data']).runtimeType);
 
+    FavoriteList favoriteList = FavoriteList();
+    await favoriteList.initialize();
 
-    emit(SearchState(users: addFavoritesKeyToList(res.data['data'])));
+    emit(SearchState(users: addFavoritesKeyToList(res.data['data'],favoriteList)));
   }
 }
 
-List<dynamic> addFavoritesKeyToList(List<dynamic> list) {
+List<dynamic> addFavoritesKeyToList(List<dynamic> list,FavoriteList favoriteList)  {
   List<dynamic> newList = [];
 
   for (var i = 0; i < list.length; i++) {
     if (list[i] is Map<String, dynamic>) {
-      Map<String, dynamic> map = Map.from(list[i] as Map<String, dynamic>);
-      map['favorite'] = false;
-      newList.add(map);
+      //print("содержится ли "+list[i]["mal_id"].toString()+" в");
+      //print(favoriteList.favorites);
+      if( favoriteList.favorites.contains(list[i]["mal_id"].toString())){
+        Map<String, dynamic> map = Map.from(list[i] as Map<String, dynamic>);
+        map['favorite'] = true;
+        newList.add(map);
+      }else{
+        Map<String, dynamic> map = Map.from(list[i] as Map<String, dynamic>);
+        map['favorite'] = false;
+        newList.add(map);
+      }
     } else {
       newList.remove(list[i]);
     }

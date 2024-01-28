@@ -71,7 +71,7 @@ class _CatalogRandomSearchState extends State<CatalogRandomSearch> {
           itemBuilder: (BuildContext context, int index) {
             //final currentIndex = index % 2;
             return Container(
-              margin: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              margin: EdgeInsets.symmetric(horizontal: 15, vertical: 1),
               child: Column(
                 children: [
 

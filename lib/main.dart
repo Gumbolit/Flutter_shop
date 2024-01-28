@@ -32,6 +32,7 @@ class FirstSeen extends StatefulWidget {
   @override
   State<FirstSeen> createState() => _FirstSeenState();
 }
+
 class _FirstSeenState extends State<FirstSeen> {
 
   Future checkFirstSeen() async {

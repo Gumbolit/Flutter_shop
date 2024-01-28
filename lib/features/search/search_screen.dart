@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../custom_wiget/custom_boyum_navigator.dart';
+import '../favourites/ClassFavourite.dart';
 import 'search_bloc/search_bloc.dart';
 
 /*class Search_screen extends StatelessWidget {
@@ -138,6 +139,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
    */
+  FavoriteList favoriteList = FavoriteList();
+
+  @override
+  void initState() {
+    super.initState();
+    favoriteList.initialize();
+    //favoriteList.deleteAllFavorites();
+  }
+
   bool isChecked = false;
   @override
   Widget build(BuildContext context) {
@@ -238,14 +248,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                         users[index]['favorite'] ? Icons.favorite : Icons.favorite_border,
                                         color: users[index]['favorite'] ? Colors.red : Colors.white,
                                       ),
-                                      onPressed: () {
+                                      onPressed: () async {
                                         print(users[index]['title'] + " до нажатия favorite в значении" + users[index]['favorite'].toString());
 
                                         if (users[index]['favorite']) {
+                                          await favoriteList.deleteFavorite(users[index]["mal_id"].toString());
                                           setState(() {
                                             users[index]['favorite'] = false;
                                           });
                                         } else {
+                                          await favoriteList.addFavorite(users[index]["mal_id"].toString());
                                           setState(() {
                                             users[index]['favorite'] = true;
                                           });
