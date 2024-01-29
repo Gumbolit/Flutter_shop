@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learning_project/features/catalog/search_random/random_search_bloc.dart';
+
 import '../../custom_wiget/custom_boyum_navigator.dart';
 
 /*class Catalog_screen extends StatelessWidget {
@@ -20,7 +21,6 @@ import '../../custom_wiget/custom_boyum_navigator.dart';
   }
 }*/
 
-
 class Catalog_screen extends StatelessWidget {
   const Catalog_screen({Key? key}) : super(key: key);
 
@@ -29,14 +29,13 @@ class Catalog_screen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => RandomSearchBloc()..add(SearchRandomEvent("flcl")),
+          create: (context) =>
+              RandomSearchBloc()..add(SearchRandomEvent("flcl")),
         ),
       ],
       child: Scaffold(
         body: CatalogRandomSearch(),
-        bottomNavigationBar:CustomBotumBar(Index: 0) ,
-
-
+        bottomNavigationBar: CustomBotumBar(Index: 0),
       ),
     );
   }
@@ -53,10 +52,19 @@ class _CatalogRandomSearchState extends State<CatalogRandomSearch> {
 
   @override
   Widget build(BuildContext context) {
-    final users = context.select((RandomSearchBloc bloc) => bloc.state.earch_list);
+    final users =
+        context.select((RandomSearchBloc bloc) => bloc.state.earch_list);
     return Scaffold(
       appBar: AppBar(
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.close))],
+        backgroundColor: Colors.black,
+        centerTitle: true,
+        title: Text(
+          'CATALOG',
+          style: TextStyle(
+            color: Colors.white,
+              fontSize: 15,
+          ),
+        ),
       ),
       body: Center(
         child: PageView.builder(
@@ -70,110 +78,117 @@ class _CatalogRandomSearchState extends State<CatalogRandomSearch> {
           },
           itemBuilder: (BuildContext context, int index) {
             //final currentIndex = index % 2;
-            return Container(
-              margin: EdgeInsets.symmetric(horizontal: 15, vertical: 1),
-              child: Column(
-                children: [
 
-                  if (users.isNotEmpty)
-                    Text(
-                      users.isNotEmpty && users[0]['title'] != null
-                          ? (users[0]['title'].length > 25
-                          ? '${users[0]['title'].substring(0, 25)}...'
-                          : users[0]['title'])
-                          : '',
-                      style: TextStyle(
-                        fontSize: 21,
-                        fontWeight: FontWeight.bold,
+            if (users.isEmpty) {
+              return Center(
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                  ), /*style: TextStyle(color: Colors.white)*/
+                  //CustomBotumBar(Index: 0),
+                ]),
+              );
+            } else {
+              return Container(
+                margin: EdgeInsets.symmetric(horizontal: 15, vertical: 1),
+                child: Column(
+                  children: [
+                    if (users.isNotEmpty)
+                      SizedBox(height: 15),
+                      Text(
+                        users.isNotEmpty && users[0]['title'] != null
+                            ? (users[0]['title'].length > 25
+                                ? '${users[0]['title'].substring(0, 25)}...'
+                                : users[0]['title'])
+                            : '',
+                        style: TextStyle(
+                          fontSize: 21,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  if (users.isNotEmpty)
-                    Container(
-                      width: 270,
-                      height: 270,
-                      child: Image.network(
-                        users[0]['images']['jpg']['image_url'] ?? '',
-                        fit: BoxFit.cover,
+                    if (users.isNotEmpty)
+                      Container(
+                        width: 270,
+                        height: 270,
+                        child: Image.network(
+                          users[0]['images']['jpg']['image_url'] ?? '',
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                  SizedBox(height: 10),
-                  if (users.isNotEmpty)
-                    Text(
-                      users.isNotEmpty && users[0]['synopsis'] != null
-                          ? (users[0]['synopsis'].length > 30
-                          ? '${users[0]['synopsis'].substring(0, 30)}...'
-                          : users[0]['synopsis'])
-                          : '',
-                      style: TextStyle(
-                        fontSize: 18,
-
+                    SizedBox(height: 10),
+                    if (users.isNotEmpty)
+                      Text(
+                        users.isNotEmpty && users[0]['synopsis'] != null
+                            ? (users[0]['synopsis'].length > 30
+                                ? '${users[0]['synopsis'].substring(0, 30)}...'
+                                : users[0]['synopsis'])
+                            : '',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
                       ),
-                    ),
-                  if (users.isEmpty)
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                          ),
-                        ],
+                    if (users.isEmpty)
+                      Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.black),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-
-                  SizedBox(height: 15),
-
-                  if (users.isNotEmpty)
-                    Text(
-                      users.isNotEmpty && users[0]['title'] != null
-                          ? (users[1]['title'].length > 25
-                          ? '${users[1]['title'].substring(0, 25)}...'
-                          : users[1]['title'])
-                          : '',
-                      style: TextStyle(
-                        fontSize: 21,
-                        fontWeight: FontWeight.bold,
+                    SizedBox(height: 20),
+                    if (users.isNotEmpty)
+                      Text(
+                        users.isNotEmpty && users[0]['title'] != null
+                            ? (users[1]['title'].length > 25
+                                ? '${users[1]['title'].substring(0, 25)}...'
+                                : users[1]['title'])
+                            : '',
+                        style: TextStyle(
+                          fontSize: 21,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  if (users.isNotEmpty)
-                    Container(
-                      width: 270,
-                      height: 270,
-                      child: Image.network(
-                        users[1]['images']['jpg']['image_url'] ?? '',
-                        fit: BoxFit.cover,
+                    if (users.isNotEmpty)
+                      Container(
+                        width: 270,
+                        height: 270,
+                        child: Image.network(
+                          users[1]['images']['jpg']['image_url'] ?? '',
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                  SizedBox(height: 10),
-                  if (users.isNotEmpty)
-                    Text(
-                      users.isNotEmpty && users[0]['synopsis'] != null
-                          ? (users[1]['synopsis'].length > 30
-                          ? '${users[1]['synopsis'].substring(0, 30)}...'
-                          : users[1]['synopsis'])
-                          : '',
-                      style: TextStyle(
-                        fontSize: 18,
-
+                    SizedBox(height: 10),
+                    if (users.isNotEmpty)
+                      Text(
+                        users.isNotEmpty && users[0]['synopsis'] != null
+                            ? (users[1]['synopsis'].length > 30
+                                ? '${users[1]['synopsis'].substring(0, 30)}...'
+                                : users[1]['synopsis'])
+                            : '',
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
                       ),
-                    ),
-                  if (users.isEmpty)
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                          ),
-                        ],
+                    if (users.isEmpty)
+                      Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.black),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-
-                ],
-              ),
-            );
-
-
+                  ],
+                ),
+              );
+            }
           },
         ),
       ),

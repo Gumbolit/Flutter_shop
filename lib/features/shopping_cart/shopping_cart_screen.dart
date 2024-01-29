@@ -8,6 +8,17 @@ class Shopping_cart_screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          centerTitle: true,
+          title: Text(
+            'SHOPPING CART',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+            ),
+          ),
+        ),
       //backgroundColor: Colors.black,
         body: Center(
           child: Column(mainAxisSize: MainAxisSize.min, children: [

@@ -16,6 +16,17 @@ class Favourites_screen extends StatelessWidget {
         ),
       ],
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          centerTitle: true,
+          title: Text(
+            'FAVORITES',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+            ),
+          ),
+        ),
         body: FavouritesListScreen(),
         bottomNavigationBar:CustomBotumBar(Index: 3) ,
 
@@ -60,7 +71,6 @@ class _FavouritesListScreenState extends State<FavouritesListScreen> {
     print("avoriteList.registration.isEmpty " + favoriteList.registration.isEmpty.toString());
 
     if(exists_favoriteList){
-
       return Center(
         child: Text(
           'Attention: Error! You are not logged in to your account.',
@@ -72,12 +82,25 @@ class _FavouritesListScreenState extends State<FavouritesListScreen> {
         ),
       );
     } else {
+
+
+
       return BlocBuilder<FavouritSearchBloc, FavouritSearchState>(
         builder: (context, state) {
           print("первая сборка _FavouritesListScreenState");
           final users = state.favourit_list;
-          return Scaffold(
-            body:Column(
+          if (users.isEmpty){
+            return Center(
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                ), /*style: TextStyle(color: Colors.white)*/
+                //CustomBotumBar(Index: 0),
+              ]),
+            );
+
+          } else {
+            return Column(
               children: [
                 SizedBox(height: 20),
                 //const SizedBox(height: 20),
@@ -103,8 +126,6 @@ class _FavouritesListScreenState extends State<FavouritesListScreen> {
                         ],
                       ),
                     ),
-
-
 
                 if (!users.any((map) => map.containsKey('empty')))
                   Expanded(
@@ -197,21 +218,11 @@ class _FavouritesListScreenState extends State<FavouritesListScreen> {
                     ),
                   ),
 
-                if (users.isEmpty)
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                        ),
-                      ],
-                    ),
-                  ),
-
               ],
-            ),
-          );
+
+            );
+
+          }
 
         },
       );

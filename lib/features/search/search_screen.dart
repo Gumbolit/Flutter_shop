@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../custom_wiget/custom_boyum_navigator.dart';
+
 import '../../custom_class/ClassUserInf.dart';
+import '../../custom_wiget/custom_boyum_navigator.dart';
 import 'search_bloc/search_bloc.dart';
 
 /*class Search_screen extends StatelessWidget {
@@ -23,7 +24,6 @@ import 'search_bloc/search_bloc.dart';
 
  */
 
-
 class Search_screen extends StatelessWidget {
   const Search_screen({Key? key}) : super(key: key);
 
@@ -36,15 +36,23 @@ class Search_screen extends StatelessWidget {
         ),
       ],
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          centerTitle: true,
+          title: Text(
+            'SEARCH',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+            ),
+          ),
+        ),
         body: MyHomePage(),
-        bottomNavigationBar:CustomBotumBar(Index: 1) ,
-
-
+        bottomNavigationBar: CustomBotumBar(Index: 1),
       ),
     );
   }
 }
-
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -149,9 +157,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   bool isChecked = false;
+
   @override
   Widget build(BuildContext context) {
-    var users = List.from(context.select((SearchBloc bloc) => bloc.state.users));
+    var users =
+        List.from(context.select((SearchBloc bloc) => bloc.state.users));
     var usersCopie = users;
     if (isChecked) {
       users.sort((a, b) {
@@ -160,193 +170,211 @@ class _MyHomePageState extends State<MyHomePage> {
         return scoreB.compareTo(scoreA);
       });
     } else {
-      users=usersCopie;
+      users = usersCopie;
     }
-    return
-        Column(
-          children: [
-            SizedBox(height: 23),
 
-            //const SizedBox(height: 20),
-            Container(
-              height: 150, // Replace with your desired height
-              child: Column(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        hintText: 'The name of the anime',
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(),
+    if (users.isEmpty){
+      return Center(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+          ), /*style: TextStyle(color: Colors.white)*/
+          //CustomBotumBar(Index: 0),
+        ]),
+      );
+    } else {
+      return Column(
+        children: [
+          SizedBox(height: 23),
+          //const SizedBox(height: 20),
+          Container(
+            height: 150, // Replace with your desired height
+            child: Column(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'The name of the anime',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (value) {
+                      context.read<SearchBloc>().add(SearchUserEvent(value));
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: isChecked,
+                        onChanged: (value) {
+                          print("isChecked в значении до изменений $isChecked");
+                          setState(() {
+                            isChecked = value!;
+                            print(
+                                "isChecked в значении после изменений $isChecked");
+                          });
+                        },
                       ),
-                      onChanged: (value) {
-                        context.read<SearchBloc>().add(SearchUserEvent(value));
-                      },
-                    ),
+                      Text(
+                        'Sort in ascending order',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
                   ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Checkbox(
-                          value: isChecked,
-                          onChanged: (value) {
-                            print("isChecked в значении до изменений $isChecked");
-                            setState(() {
-
-                              isChecked = value!;
-                              print("isChecked в значении после изменений $isChecked");
-                            });
-
-
-                          },
-                        ),
-                        Text(
-                          'Sort in ascending order',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            if (users.isNotEmpty)
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  children: List.generate(users.length, (index) {
-                    return ListTile(
-                      title: Column(
-                        children: [
-                          Stack(
-                            alignment: Alignment.topRight,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Container(
-                                  width: 100,
-                                  height: 100,
-                                  child: Image.network(
-                                    users[index]['images']['jpg']['image_url'] ?? '',
-                                    fit: BoxFit.cover,
-                                  ),
+          ),
+          if (users.isNotEmpty)
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 2,
+                children: List.generate(users.length, (index) {
+                  return ListTile(
+                    title: Column(
+                      children: [
+                        Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Container(
+                                width: 100,
+                                height: 100,
+                                child: Image.network(
+                                  users[index]['images']['jpg']['image_url'] ??
+                                      '',
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                              Container(
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white60,
-                                ),
-                                child: Center(
-                                  child: SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: IconButton(
-                                      padding: EdgeInsets.zero,
-                                      icon: Icon(
-                                        users[index]['favorite'] ? Icons.favorite : Icons.favorite_border,
-                                        color: users[index]['favorite'] ? Colors.red : Colors.white,
-                                      ),
-                                      onPressed: () async {
-                                        print(users[index]['title'] + " до нажатия favorite в значении" + users[index]['favorite'].toString());
+                            ),
+                            Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white60,
+                              ),
+                              child: Center(
+                                child: SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    icon: Icon(
+                                      users[index]['favorite']
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: users[index]['favorite']
+                                          ? Colors.red
+                                          : Colors.white,
+                                    ),
+                                    onPressed: () async {
+                                      print(users[index]['title'] +
+                                          " до нажатия favorite в значении" +
+                                          users[index]['favorite'].toString());
 
-                                        if(favoriteList.registration.isEmpty){
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(5.0), // Reduce corner rounding
-                                                ),
-                                                title: Center( child:Text('Warning')),
-                                                content: Text('You are not logged in to your account.'),
-                                                actions: [
-                                                  TextButton(
-                                                    style: ElevatedButton.styleFrom(
-                                                      padding:
-                                                      const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
-                                                      backgroundColor: Colors.black,
-                                                      textStyle: TextStyle(fontSize: 13),
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(2),
+                                      if (favoriteList.registration.isEmpty) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(
+                                                    5.0), // Reduce corner rounding
+                                              ),
+                                              title:
+                                              Center(child: Text('Warning')),
+                                              content: Text(
+                                                  'You are not logged in to your account.'),
+                                              actions: [
+                                                TextButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 0,
+                                                        vertical: 16),
+                                                    backgroundColor: Colors.black,
+                                                    textStyle:
+                                                    TextStyle(fontSize: 13),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                      BorderRadius.circular(
+                                                          2),
 
-                                                        //side: BorderSide(width: 50, color: Colors.black),
-                                                      ),
-                                                      minimumSize: Size(380, 40),
+                                                      //side: BorderSide(width: 50, color: Colors.black),
                                                     ),
-                                                    onPressed: () {
-                                                      Navigator.of(context).pop();
-                                                    },
-                                                    child: Text('OK',style: TextStyle(
-                                                        color: Colors
-                                                            .white)),
+                                                    minimumSize: Size(380, 40),
                                                   ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        } else { if (users[index]['favorite']) {
-                                          await favoriteList.deleteFavorite(users[index]["mal_id"].toString());
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text('OK',
+                                                      style: TextStyle(
+                                                          color: Colors.white)),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        if (users[index]['favorite']) {
+                                          await favoriteList.deleteFavorite(
+                                              users[index]["mal_id"].toString());
                                           setState(() {
                                             users[index]['favorite'] = false;
                                           });
                                         } else {
-                                          await favoriteList.addFavorite(users[index]["mal_id"].toString());
+                                          await favoriteList.addFavorite(
+                                              users[index]["mal_id"].toString());
                                           setState(() {
                                             users[index]['favorite'] = true;
                                           });
-                                        }};
+                                        }
+                                      }
+                                      ;
 
-                                        print(users[index]['title'] + " после нажатия favorite в значении" + users[index]['favorite'].toString());
-                                      },
-                                    ),
+                                      print(users[index]['title'] +
+                                          " после нажатия favorite в значении" +
+                                          users[index]['favorite'].toString());
+                                    },
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            users[index]['title'].length > 17
-                                ? '${users[index]['title'].substring(0, 17)}...'
-                                : users[index]['title'],
-                          ),
-                          const SizedBox(height: 5),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 8),
-                              child: Text(
-                                users[index]['score'].toString(),
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          users[index]['title'].length > 17
+                              ? '${users[index]['title'].substring(0, 17)}...'
+                              : users[index]['title'],
+                        ),
+                        const SizedBox(height: 5),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 8),
+                            child: Text(
+                              users[index]['score'].toString(),
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                           ),
-                        ],
-                      ),
-                    );
-                  }),
-                ),
-              ),
-            if (users.isEmpty)
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                }),
               ),
+            ),
+        ],
+      );
 
-          ],
-        );
+    }
 
 
   }
-
 }
-
