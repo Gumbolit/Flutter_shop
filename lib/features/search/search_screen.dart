@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../custom_wiget/custom_boyum_navigator.dart';
-import '../favourites/ClassFavourite.dart';
+import '../../custom_class/ClassUserInf.dart';
 import 'search_bloc/search_bloc.dart';
 
 /*class Search_screen extends StatelessWidget {
@@ -139,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
    */
-  FavoriteList favoriteList = FavoriteList();
+  UserInf favoriteList = UserInf();
 
   @override
   void initState() {
@@ -165,7 +165,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return
         Column(
           children: [
-            const Text('Search User'),
+            SizedBox(height: 23),
+
             //const SizedBox(height: 20),
             Container(
               height: 150, // Replace with your desired height
@@ -174,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Expanded(
                     child: TextFormField(
                       decoration: const InputDecoration(
-                        hintText: 'User name',
+                        hintText: 'The name of the anime',
                         prefixIcon: Icon(Icons.search),
                         border: OutlineInputBorder(),
                       ),
@@ -251,7 +252,42 @@ class _MyHomePageState extends State<MyHomePage> {
                                       onPressed: () async {
                                         print(users[index]['title'] + " до нажатия favorite в значении" + users[index]['favorite'].toString());
 
-                                        if (users[index]['favorite']) {
+                                        if(favoriteList.registration.isEmpty){
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(5.0), // Reduce corner rounding
+                                                ),
+                                                title: Center( child:Text('Warning')),
+                                                content: Text('You are not logged in to your account.'),
+                                                actions: [
+                                                  TextButton(
+                                                    style: ElevatedButton.styleFrom(
+                                                      padding:
+                                                      const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
+                                                      backgroundColor: Colors.black,
+                                                      textStyle: TextStyle(fontSize: 13),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(2),
+
+                                                        //side: BorderSide(width: 50, color: Colors.black),
+                                                      ),
+                                                      minimumSize: Size(380, 40),
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                    child: Text('OK',style: TextStyle(
+                                                        color: Colors
+                                                            .white)),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        } else { if (users[index]['favorite']) {
                                           await favoriteList.deleteFavorite(users[index]["mal_id"].toString());
                                           setState(() {
                                             users[index]['favorite'] = false;
@@ -261,7 +297,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           setState(() {
                                             users[index]['favorite'] = true;
                                           });
-                                        }
+                                        }};
 
                                         print(users[index]['title'] + " после нажатия favorite в значении" + users[index]['favorite'].toString());
                                       },
@@ -295,10 +331,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             if (users.isEmpty)
-              Column(mainAxisSize: MainAxisSize.min, children: [
-                CircularProgressIndicator(),
-                //CustomBotumBar(Index: 0),
-              ])
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                    ),
+                  ],
+                ),
+              ),
 
           ],
         );

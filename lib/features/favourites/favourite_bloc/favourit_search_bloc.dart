@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';
 
-import '../ClassFavourite.dart';
+import '../../../custom_class/ClassUserInf.dart';
 
 
 part 'favourit_search_event.dart';
@@ -28,7 +28,7 @@ class FavouritSearchBloc extends Bloc<FavouritSearchEvent, FavouritSearchState> 
   _onSearch(RequestFavouritEvent event, Emitter<FavouritSearchState> emit) async {
     final List<Map<String, dynamic>> res = [];
 
-    FavoriteList favoriteList = FavoriteList();
+    UserInf favoriteList = UserInf();
     await favoriteList.initialize();
     print("вызов внутри блока, список избранного favoriteList.favorites:");
     print(favoriteList.favorites);
@@ -80,7 +80,8 @@ class FavouritSearchBloc extends Bloc<FavouritSearchEvent, FavouritSearchState> 
       //final updatedFavoritesList = await addFavoritesKeyToList(res);
       emit(FavouritSearchState(favourit_list: res));
     }else {
-      emit(FavouritSearchState(favourit_list: []));
+      res.add({'empty': 0});
+      emit(FavouritSearchState(favourit_list: res));
     }
 
   }

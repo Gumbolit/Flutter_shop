@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:stream_transform/stream_transform.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 
-import '../../favourites/ClassFavourite.dart';
+import '../../../custom_class/ClassUserInf.dart';
 
 part 'search_event.dart';
 part 'search_state.dart';
@@ -57,14 +57,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     print("addFavoritesKeyToList Type - ");
     //print( addFavoritesKeyToList(res.data['data']).runtimeType);
 
-    FavoriteList favoriteList = FavoriteList();
+    UserInf favoriteList = UserInf();
     await favoriteList.initialize();
 
     emit(SearchState(users: addFavoritesKeyToList(res.data['data'],favoriteList)));
   }
 }
 
-List<dynamic> addFavoritesKeyToList(List<dynamic> list,FavoriteList favoriteList)  {
+List<dynamic> addFavoritesKeyToList(List<dynamic> list,UserInf favoriteList)  {
   List<dynamic> newList = [];
 
   for (var i = 0; i < list.length; i++) {

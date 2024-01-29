@@ -83,7 +83,7 @@ class _CatalogRandomSearchState extends State<CatalogRandomSearch> {
                           : users[0]['title'])
                           : '',
                       style: TextStyle(
-                        fontSize: 25,
+                        fontSize: 21,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -111,10 +111,17 @@ class _CatalogRandomSearchState extends State<CatalogRandomSearch> {
                     ),
                   if (users.isEmpty)
                     Center(
-                      child: CircularProgressIndicator(),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                          ),
+                        ],
+                      ),
                     ),
 
-                  SizedBox(height: 30),
+                  SizedBox(height: 15),
 
                   if (users.isNotEmpty)
                     Text(
@@ -124,7 +131,7 @@ class _CatalogRandomSearchState extends State<CatalogRandomSearch> {
                           : users[1]['title'])
                           : '',
                       style: TextStyle(
-                        fontSize: 25,
+                        fontSize: 21,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -152,7 +159,14 @@ class _CatalogRandomSearchState extends State<CatalogRandomSearch> {
                     ),
                   if (users.isEmpty)
                     Center(
-                      child: CircularProgressIndicator(),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                          ),
+                        ],
+                      ),
                     ),
 
                 ],
